@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stress Detection</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            margin: 20px auto;
+            width: 300px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+        }
+
+        .low { color: lightgreen; }
+        .medium { color: orange; }
+        .high { color: red; }
+    </style>
+</head>
+
+<body>
+
+    <h1>Stress Detection System</h1>
+
+    <div class="card">
+        <h2>❤️ Heart Rate</h2>
+        <p id="hr">--</p>
+    </div>
+
+    <div class="card">
+        <h2>🌡 Temperature</h2>
+        <p id="temp">--</p>
+    </div>
+
+    <div class="card">
+        <h2>🧠 Stress Level</h2>
+        <p id="stress">--</p>
+    </div>
+
+    <div class="card">
+        <h2>💡 Suggestion</h2>
+        <p id="suggestion">--</p>
+    </div>
+
+<script>
+async function fetchData() {
+    const res = await fetch('/predict');
+    const data = await res.json();
+
+    document.getElementById("hr").innerText = data.heart_rate;
+    document.getElementById("temp").innerText = data.temperature;
+    document.getElementById("stress").innerText = data.stress_level;
+
+    let suggestion = "";
+
+    if(data.stress_level == "Low") {
+        suggestion = "Relax 😊";
+        document.getElementById("stress").className = "low";
+    }
+    else if(data.stress_level == "Medium") {
+        suggestion = "Take a walk 🚶";
+        document.getElementById("stress").className = "medium";
+    }
+    else {
+        suggestion = "Drink water & breathe deeply 💧";
+        document.getElementById("stress").className = "high";
+    }
+
+    document.getElementById("suggestion").innerText = suggestion;
+}
+
+setInterval(fetchData, 2000);
+</script>
+
+</body>
+</html>
